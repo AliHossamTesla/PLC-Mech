@@ -12,9 +12,12 @@ It is designed so you can later point the same client and dashboard at a **real 
 
 ## 1. Prerequisites
 
-- **Python** 3.10+ (you have 3.12 on Ubuntu).
+- **Python** 3.10+.
 - **Git** (optional, for cloning from GitHub).
-- On Linux, install the Snap7 native library:
+
+### 1.1 Linux – Snap7 native library
+
+On Ubuntu/Debian, install the Snap7 native library:
 
 ```bash
 sudo apt update
@@ -22,6 +25,16 @@ sudo apt install libsnap7-1
 ```
 
 If your distro doesn’t have `libsnap7`, follow the instructions from the Snap7 project to install it, then continue.
+
+### 1.2 Windows – Snap7 native library
+
+On Windows you also need the Snap7 DLL:
+
+1. Download the Snap7 Windows package (x86 or x64) from the official project.
+2. Copy the **Snap7 DLL** (e.g. `snap7.dll`) to a location on your `PATH`, or next to your Python executable, or next to this project (e.g. in the project root).
+3. Make sure you use the **64‑bit DLL** if your Python is 64‑bit (most common).
+
+If `python-snap7` cannot find the DLL, you will get import or connection errors; in that case, double‑check that `snap7.dll` is in a folder listed in your `PATH` and restart your terminal/IDE.
 
 ---
 
@@ -49,7 +62,9 @@ All commands below assume you are **inside the project root**.
 
 ## 3. Create & activate a virtual environment
 
-Ubuntu marks the system Python as **externally managed** (PEP 668), so you should use a venv.
+Using a virtual environment is recommended on **both Linux and Windows**.
+
+### 3.1 Linux
 
 ```bash
 cd /home/tesla/Downloads/islam    # or your clone path
@@ -63,6 +78,28 @@ You should now see `(.venv)` in your shell prompt.
 To deactivate later:
 
 ```bash
+deactivate
+```
+
+### 3.2 Windows (PowerShell / CMD)
+
+From the project directory:
+
+```powershell
+cd C:\path\to\PLC-Mech   # adjust to your clone path
+
+python -m venv .venv
+
+# PowerShell:
+.venv\Scripts\Activate.ps1
+
+# or CMD:
+.venv\Scripts\activate.bat
+```
+
+You should now see `(.venv)` in your prompt. To deactivate:
+
+```powershell
 deactivate
 ```
 
@@ -87,11 +124,20 @@ This installs:
 
 ## 5. Run the mock PLC server
 
-Terminal 1:
+Terminal 1 (Linux):
 
 ```bash
 cd /home/tesla/Downloads/islam
 source .venv/bin/activate
+
+python mock_server.py
+```
+
+Terminal 1 (Windows PowerShell / CMD):
+
+```powershell
+cd C:\path\to\PLC-Mech
+.venv\Scripts\Activate.ps1   # or .venv\Scripts\activate.bat
 
 python mock_server.py
 ```
@@ -116,11 +162,22 @@ This is a **fake S7 server** exposing:
 
 ## 6. Run the real-time dashboard
 
-Open **another terminal** (Terminal 2):
+Open **another terminal** (Terminal 2).
+
+Linux:
 
 ```bash
 cd /home/tesla/Downloads/islam
 source .venv/bin/activate
+
+streamlit run dashboard.py
+```
+
+Windows PowerShell / CMD:
+
+```powershell
+cd C:\path\to\PLC-Mech
+.venv\Scripts\Activate.ps1   # or .venv\Scripts\activate.bat
 
 streamlit run dashboard.py
 ```
@@ -186,11 +243,22 @@ You can then switch back to **Mock (local)**; the app will reconnect to `127.0.0
 
 ## 8. Direct CLI client test (optional)
 
-You can test the client without Streamlit using the simple text loop:
+You can test the client without Streamlit using the simple text loop.
+
+Linux:
 
 ```bash
 cd /home/tesla/Downloads/islam
 source .venv/bin/activate
+
+python plc_client.py
+```
+
+Windows PowerShell / CMD:
+
+```powershell
+cd C:\path\to\PLC-Mech
+.venv\Scripts\Activate.ps1   # or .venv\Scripts\activate.bat
 
 python plc_client.py
 ```
